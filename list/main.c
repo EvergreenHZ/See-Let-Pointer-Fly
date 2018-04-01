@@ -1,6 +1,8 @@
 #include "list.h"
-
+#include "sorted_list.h"
+#include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 void print_list(struct List *list) {
         struct ListNode *p = list->head;
@@ -13,29 +15,28 @@ void print_list(struct List *list) {
         printf("\n");
 }
 
-
 int main() {
-        struct List s;
-        int i;
 
-        list_init(&s);
+        srand(time(NULL));
 
-        for (i = 0; i < 5; i++) {
-                list_push_back(&s, i);
+        struct List *srcs[11], dst;
+        list_init(&dst);
+        for (int i = 0; i < 10; i ++) {
+                srcs[i] = (struct List*)malloc(sizeof(struct List));
         }
 
-        print_list(&s);
+        for (int i = 0; i < 10; i++) {
+                list_init(srcs[i]);
+                for (int j = 0; j < 5 + 2 * i; j++) {
+                        list_push_back(srcs[i], i * (j + 1) + 1 + j);
+                }
+                print_list(srcs[i]);
+        }
 
-        printf("size: %d\n", s.size);
 
-
-        list_pop_front(&s);
-
-        print_list(&s);
-
-        printf("size: %d\n", s.size);
-
-        list_destroy(&s);
+        merge_multiple_lists(&dst, srcs, 10);
+        print_list(&dst);
+        
 
         return 0;
 }

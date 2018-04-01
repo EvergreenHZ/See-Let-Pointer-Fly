@@ -33,17 +33,23 @@ enum Status merge_multiple_lists(struct List *dst, struct List **srcs, int n)
                 nums += srcs[i]->size;
                 p[i] = srcs[i]->head;  // copy all list head
         }
+        //printf("total number: %4d\n", nums);
 
-        for (int i = 0; i < nums; i++) {
-                for (int j = 0; j < n - 1; j++) {
-                        if (p[i] && p[i]->data < p[i + 1]->data) {  // compare two numbers and select the little one
-                                t_min = p[i]->data;
-                                min_index = i;
+        int i = 0;
+        int j = 0;
+        for (i = 0; i < nums; i++) {
+                t_min = INT_MAX;
+                for (j = 0; j < n; j++) {
+                        if (p[j] && t_min > p[j]->data) {  // compare two numbers and select the little one
+                                t_min = p[j]->data;
+                                min_index = j;
                         }
                 }
+                //printf("min_index: %4d\n", min_index);
                 list_push_back(dst, t_min);
                 p[min_index] = p[min_index]->next;  // move to next
         }
+        //printf("last: %4d\n", i);
 
         return STATUS_OK;
 }
