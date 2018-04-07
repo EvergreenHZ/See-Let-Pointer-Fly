@@ -2,19 +2,21 @@
 
 #include "vector.h"
 
-struct Queue {
+typedef struct Queue {
         int front;
         int rear;
-        struct Vector vector;
-};
+        struct Vector vec;
+} Queue;
 
-void queue_init(Queue *);
+void queue_init(Queue *, int);
 
 void queue_destroy(Queue *);
 
 int queue_size(Queue *);
 
-bool queue_empty(Queue *);
+int queue_empty(Queue *);
+
+int queue_full(Queue *);
 
 DataType queue_front(Queue *);
 
