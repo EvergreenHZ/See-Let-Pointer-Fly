@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stdio.h>
+#include <stdlib.h>
+
 enum Status {
   STATUS_OK                   = 0,
 
@@ -20,3 +23,5 @@ enum Status {
     x = y;                                      \
     y = SWAP;                                   \
   } while (0)
+
+void Error(const char *msg);

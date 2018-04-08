@@ -2,7 +2,7 @@
 
 #include "common.h"
 
-typedef char DataType;
+typedef char* DataType;
 
 struct ListNode {
   DataType data;
