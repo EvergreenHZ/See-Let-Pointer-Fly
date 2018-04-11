@@ -40,6 +40,16 @@ void dlist_destroy(DList dlist)
         dlist->prev = dlist;
 }
 
+void dlist_reverse_print(DList dlist)
+{
+        NodePtr node = dlist->prev;
+        while (node != dlist) {
+                printf("%4d ", node->data);
+                node = node->prev;
+        }
+        printf("\n");
+}
+
 enum Status dlist_insert_after(DList dlist, NodePtr node, DataType data)
 {
         NodePtr new_node = (NodePtr)Malloc(sizeof(struct Node));
@@ -48,16 +58,11 @@ enum Status dlist_insert_after(DList dlist, NodePtr node, DataType data)
         new_node->next = NULL;
 
         if (node == NULL) {  // insert at the front of the list
-                if (dlist_size(dlist) == 0) {
-                        dlist->prev = new_node;
-                }
+                dlist->next->prev = new_node;
                 new_node->next = dlist->next;
                 new_node->prev = dlist;
                 dlist->next    = new_node;
         } else {  // insert common place, list size >= 1
-                //if (node->next == dlist) {  // last node
-                //        dlist->prev = new_node;
-                //}
                 new_node->next = node->next;
                 node->next->prev = new_node;
                 new_node->prev = node;
@@ -104,13 +109,13 @@ enum Status dlist_remove_after(DList dlist, NodePtr node)
         if (node == NULL || node == dlist || node->next == dlist) {  // remove first one
                 NodePtr tmp = dlist->next;
                 dlist->next = dlist->next->next;
-                dlist->next->next->prev = dlist;
+                dlist->next->prev = dlist;
                 free(tmp);
                 //dlist_print(dlist);
         } else {
                 NodePtr tmp = node->next;
                 node->next = node->next->next;
-                node->next->next->prev = node;
+                node->next->prev = node;
                 free(tmp);
                 //dlist_print(dlist);
         }
@@ -124,10 +129,6 @@ enum Status dlist_pop_front(DList dlist)
 
 enum Status dlist_pop_back(DList dlist)
 {
-        /* 
-         * if the list is not empty,
-         * everything is fine
-         */
         NodePtr last_node = dlist_last_node(dlist);
         if (last_node == NULL) {
                 Error("remove an empty list");
@@ -137,13 +138,7 @@ enum Status dlist_pop_back(DList dlist)
 
 enum Status dlist_remove_current(DList dlist, NodePtr node)
 {
-        // you cann't remove the head
-        //node = ((node != NULL) ? node->prev : node);
-        if (node != NULL) {
-                printf("current node->data: %4d\n", node->data);
-                node = node->prev;
-                printf("current previous node->data: %4d\n", node->prev->data);
-        }
+        node = node ? node->prev : node;
         return dlist_remove_after(dlist, node);
 }
 
@@ -173,16 +168,12 @@ NodePtr dlist_find_key(DList dlist, DataType data)
 NodePtr dlist_at(DList dlist, int n)
 {
         // the dummy head node named 0th node
-        if (dlist_size(dlist) == 0) {
-                return dlist;
-        }
         if (n < 0) {
                 Error("invalid position\n");
         }
         n %= (dlist_size(dlist) + 1);
-        if (n == 0) return dlist;
-        NodePtr iter = dlist->next;
-        int index = 1;
+        NodePtr iter = dlist;
+        int index = 0;
         while (index != n) {
                 index++;
                 iter = iter->next;

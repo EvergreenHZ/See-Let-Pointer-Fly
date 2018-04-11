@@ -18,6 +18,8 @@ void dlist_destroy(DList);
 
 void dlist_print(DList);
 
+void dlist_reverse_print(DList);
+
 enum Status dlist_insert_after(DList, NodePtr, DataType);
 
 enum Status dlist_push_back(DList, DataType);
