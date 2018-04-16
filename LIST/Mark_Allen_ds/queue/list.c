@@ -169,9 +169,6 @@ NodePtr list_find_key(List list, DataType key)
 
 NodePtr list_at(List list, int pos)
 {
-        if (pos <= 0 || pos > list_size(list)) {
-                Error("Position Error\n");
-        }
         int n = 1;
         NodePtr node = list->next;
         while (node && n++ != pos) {
@@ -211,31 +208,4 @@ void list_swap(List a, List b)
 enum Status list_remove_at(List list, int pos)
 {
         return list_remove_current(list, list_at(list, pos));
-}
-
-NodePtr list_create()
-{
-        NodePtr dummy_head = malloc(sizeof(struct Node));
-        if (!dummy_head) {
-                Error("Malloc Failed!\n");
-        }
-        dummy_head->next = NULL;
-
-        return dummy_head;
-}
-
-void list_dispose(List list)
-{
-        list_destroy(list);
-        free(list);
-}
-
-void list_copy_init(List src, List dst)
-{
-        NodePtr p = src->next;
-        while (p) {
-                list_push_back(dst, p->data);
-        }
-
-        return ;
 }

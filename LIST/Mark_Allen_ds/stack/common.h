@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stddef.h>
+#include "stddef.h"
 enum Status {
         ERR          = 0,
         OK           = 1,
@@ -15,6 +15,6 @@ do {                    \
 
 void Error(char *msg);
 
-void* Malloc(size_t);
+void* Malloc(size_t num);
 
 int random_int();

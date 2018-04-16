@@ -10,6 +10,10 @@ struct Node {
 typedef struct Node* Clist;
 typedef struct Node* NodePtr;
 
+/* this is too easy,
+ * check dlist for more details
+ */
+
 void clist_init(Clist);
 
 void clist_destroy(Clist);

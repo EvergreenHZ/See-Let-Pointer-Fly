@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stddef.h>
+
 enum Status {
         ERR          = 0,
         OK           = 1,

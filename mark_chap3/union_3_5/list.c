@@ -229,13 +229,3 @@ void list_dispose(List list)
         list_destroy(list);
         free(list);
 }
-
-void list_copy_init(List src, List dst)
-{
-        NodePtr p = src->next;
-        while (p) {
-                list_push_back(dst, p->data);
-        }
-
-        return ;
-}

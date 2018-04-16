@@ -19,24 +19,6 @@ void list_destroy(List list)
         list->next = NULL;
 }
 
-void list_reverse(List list)
-{
-        int size = list_size(list);
-        if (size == 0 || size == 1) return ;
-
-        struct Node* p = list->next->next;
-        struct Node* tmp = list->next;
-        while (p) {
-                struct Node *q = p->next;
-                p->next = list->next;
-                list->next = p;
-                p = q;
-        }
-        tmp->next = NULL;
-
-        list_print(list);
-}
-
 enum Status list_insert_after(List list, NodePtr node, DataType data)
 {
         NodePtr new_node = (NodePtr)malloc(sizeof(NodePtr));
@@ -169,9 +151,6 @@ NodePtr list_find_key(List list, DataType key)
 
 NodePtr list_at(List list, int pos)
 {
-        if (pos <= 0 || pos > list_size(list)) {
-                Error("Position Error\n");
-        }
         int n = 1;
         NodePtr node = list->next;
         while (node && n++ != pos) {
@@ -198,44 +177,4 @@ enum Status list_remove_current(List list, NodePtr node)
 enum Status list_remove_kth_node(List list, int k)
 {
         return list_remove_current(list, list_at(list, k));
-}
-
-void list_swap(List a, List b)
-{
-        NodePtr tmp_node = NULL;
-        tmp_node = a->next;
-        a->next = b->next;
-        b->next = tmp_node;
-}
-
-enum Status list_remove_at(List list, int pos)
-{
-        return list_remove_current(list, list_at(list, pos));
-}
-
-NodePtr list_create()
-{
-        NodePtr dummy_head = malloc(sizeof(struct Node));
-        if (!dummy_head) {
-                Error("Malloc Failed!\n");
-        }
-        dummy_head->next = NULL;
-
-        return dummy_head;
-}
-
-void list_dispose(List list)
-{
-        list_destroy(list);
-        free(list);
-}
-
-void list_copy_init(List src, List dst)
-{
-        NodePtr p = src->next;
-        while (p) {
-                list_push_back(dst, p->data);
-        }
-
-        return ;
 }

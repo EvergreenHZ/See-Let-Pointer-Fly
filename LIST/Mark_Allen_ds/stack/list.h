@@ -13,19 +13,9 @@ typedef struct Node* NodePtr;
 
 void list_init(List);
 
-void list_copy_init(List, List);
-
 void list_destroy(List);
 
-NodePtr list_create();
-
-void list_dispose(List);
-
 void list_print(List);
-
-void list_reverse(List);
-
-void list_swap(List, List);
 
 enum Status list_insert_after(List, NodePtr, DataType);
 
@@ -42,8 +32,6 @@ enum Status list_pop_back(List);
 enum Status list_remove_current(List, NodePtr);
 
 enum Status list_remove_kth_node(List, int);
-
-enum Status list_remove_at(List, int);
 
 NodePtr list_node_previous(List, NodePtr);
 

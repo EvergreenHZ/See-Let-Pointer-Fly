@@ -6,6 +6,10 @@
  * be careful when inserting or removing a node
  * say append, push_front, pop etc.
  *
+ * I mean, you should check empty list,
+ * insert / remove at the head or the tail.
+ * keep your size update.
+ *
  */
 void list_init(struct List *list)
 {

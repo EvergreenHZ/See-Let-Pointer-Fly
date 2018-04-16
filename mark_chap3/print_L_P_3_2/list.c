@@ -169,15 +169,18 @@ NodePtr list_find_key(List list, DataType key)
 
 NodePtr list_at(List list, int pos)
 {
-        if (pos <= 0 || pos > list_size(list)) {
+        if (pos < 0 || pos > list_size(list)) {
                 Error("Position Error\n");
         }
+        if (pos == 0) return list;
+
         int n = 1;
         NodePtr node = list->next;
-        while (node && n++ != pos) {
+        int i = 0;
+        while (node && (n++ != pos)) {
                 node = node->next;
         }
-        return node;
+        return node;  // node NULL, or find the right place
 }
 
 void list_print(List list)
@@ -228,14 +231,4 @@ void list_dispose(List list)
 {
         list_destroy(list);
         free(list);
-}
-
-void list_copy_init(List src, List dst)
-{
-        NodePtr p = src->next;
-        while (p) {
-                list_push_back(dst, p->data);
-        }
-
-        return ;
 }

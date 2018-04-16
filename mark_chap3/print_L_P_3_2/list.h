@@ -13,8 +13,6 @@ typedef struct Node* NodePtr;
 
 void list_init(List);
 
-void list_copy_init(List, List);
-
 void list_destroy(List);
 
 NodePtr list_create();
