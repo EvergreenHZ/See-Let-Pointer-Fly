@@ -22,5 +22,6 @@ void* Malloc(size_t num_of_mem_space)
 
 int random_int()
 {
+        srand(time(NULL));
         return rand();
 }

@@ -35,7 +35,7 @@ enum Status list_insert_after(struct List *list, struct ListNode *node,
     list->head = new_node;
   } else {
     // Insertion at somewhere other than at the head
-    if (node->next == NULL) {
+    if (node->next == NULL) {  // last node
       list->tail = new_node;
     }
 
