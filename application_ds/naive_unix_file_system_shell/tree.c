@@ -352,18 +352,17 @@ int tree_height(NodePtr root)
         return node_height(root);
 }
 
-static void print_name(NodePtr current_node, int depth)
-{
-        for (int i = 0; i < depth; i++) {
-                printf("        ");
-        }
-        printf("%s\n", current_node->file_name);
-}
+//static void print_name(NodePtr current_node, int depth)
+//{ }
 
 static void list_dir(NodePtr current_node, int depth)
 {
         if (current_node != NULL) {  // legitimate entry
-                print_name(current_node, depth);
+                for (int i = 0; i < depth; i++) {
+                        printf("    ");
+                }
+                printf("%s\n", current_node->file_name);
+                //print_name(current_node, depth);
                 if (current_node->file_type == DIRECTORY) {
                         NodePtr node = current_node->child;
                         while (node) {
