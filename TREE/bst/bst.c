@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "bst.h"
 
 BSTPtr bst_make_empty(BSTPtr root)
@@ -111,7 +112,7 @@ NodePtr bst_find_parent(BSTPtr root, NodePtr node)
                 NodePtr p = root;
                 while (p) {  // node can't be root
                         if (p->left == node || p->right == node) {
-                                printf("parent is: %d\n", p->data);
+                                //printf("parent is: %d\n", p->data);
                                 return p;
                         } else {
                                 if (node->data > p->data) {
@@ -160,13 +161,13 @@ void bst_inorder_tranversal(BSTPtr root)
         }
 }
 
-void bst_delete_value(BSTPtr root, DataType data)
+BSTPtr bst_delete_value(BSTPtr root, DataType data)
 {
        NodePtr node = bst_search(root, data);
        if (node == NULL) {
-               return ;
+               return NULL;
        } else {
-               bst_delete(root, node);
+               return bst_delete(root, node);
        }
 }
 
@@ -184,17 +185,16 @@ BSTPtr bst_delete(BSTPtr root, NodePtr node)
                         BSTPtr tmp_root = root->right;
                         free(root);
                         return tmp_root;
-                } else if (node->left == NULL && node->right != NULL) {
+                } else if (node->left != NULL && node->right == NULL) {
                         BSTPtr tmp_root = root->left;
                         free(root);
                         return tmp_root;
                 } else {
-                        NodePtr right_min = bst_find_min(root->right);
+                        NodePtr right_min = bst_find_min(node->right);
                         int tmp_data = right_min->data;
+                        // cause I always pass the root
                         bst_delete(root, right_min);
-                        root->data = tmp_data;
-                        printf("right min is: %d\n", tmp_data);
-                        //free(right_min);
+                        node->data = tmp_data;
                         return root;
                 }
         }
@@ -228,5 +228,167 @@ BSTPtr bst_delete(BSTPtr root, NodePtr node)
                 int tmp_data = right_min->data;
                 bst_delete(root, right_min);
                 node->data = tmp_data;
+                return root;
         }
+}
+
+BSTPtr bst_delete2(BSTPtr root, DataType data)
+{
+        NodePtr tmp_cell;
+        if (root == NULL) {
+                return NULL;
+        } else if (data < root->data) {  // go left
+                root->left = bst_delete2(root->left, data);
+        } else if (data > root->data) {  // go right
+                root->right = bst_delete2(root->right, data);
+        } else {  // data found and delete
+                if (root->left && root->right) {  // two children
+                        tmp_cell = bst_find_min(root->right);
+                        root->data = tmp_cell->data;
+                        root->right = bst_delete2(root->right, tmp_cell->data);
+                } else {  // one or zore children
+                        tmp_cell = root;
+                        if (root->left == NULL) {
+                                root = root->right;  // you will return root
+                        } else {
+                                if (root->right == NULL) {
+                                        root = root->left;
+                                }
+                        }
+                        free(tmp_cell);
+                }
+        }
+        return root;
+}
+
+BSTPtr bst_delete3(BSTPtr root, NodePtr node)
+{
+        if (root == NULL) {
+                return NULL;
+        }
+        if (node == root) {  // delete root
+                if (node->left == NULL && node->right == NULL) {
+                        free(node);
+                        return NULL;
+                } else if (node->left == NULL && node->right != NULL) {
+                        BSTPtr tmp_root = root->right;
+                        free(root);
+                        return tmp_root;
+                } else if (node->left != NULL && node->right == NULL) {
+                        BSTPtr tmp_root = root->left;
+                        free(root);
+                        return tmp_root;
+                } else {  // have both left and right children
+                        NodePtr right_min = bst_find_min(node->right);
+                        root->data = right_min->data;
+                        // right_min has no left child
+                        node->right = bst_delete(node->right, right_min);
+                        return root;
+                }
+        }
+        NodePtr parent = bst_find_parent(root, node);
+        if (node->left == NULL && node->right == NULL) {  // leaf node
+                if (parent->left == node) {
+                        parent->left = NULL;
+                } else {
+                        parent->right = NULL;
+                }
+                free(node);
+                return root;
+        } else if (node->left != NULL && node->right == NULL) {
+                if (parent->left == node) {
+                        parent->left = node->left;
+                } else {
+                        parent->right = node->left;
+                }
+                free(node);
+                return root;
+        } else if (node->left == NULL && node->right != NULL) {
+                if (parent->left == node) {
+                        parent->left = node->right;
+                } else {
+                        parent->right = node->right;
+                }
+                free(node);
+                return root;
+        } else {  // have two children
+                NodePtr right_min = bst_find_min(node->right);
+                node->data = right_min->data;
+                node->right = bst_delete(node->right, right_min);
+                return root;
+        }
+}
+
+BSTPtr bst_delete_value3(BSTPtr root, DataType data)
+{
+       NodePtr node = bst_search(root, data);
+       if (node == NULL) {
+               return NULL;
+       } else {
+               // pass value, cause you don't delete root unless ...
+               NodePtr tmp = bst_delete3(root, node);
+               //printf("tmp root: %d\n", tmp->data);
+               return tmp;
+       }
+}
+
+//#define COUNT 10
+//static void bst_print_helper2(BSTPtr root, int space)
+//{
+//        if (root == NULL) {
+//                return ;
+//        }
+//        space += COUNT;
+//        bst_print_helper(root->right, space);
+//
+//        printf("\n");
+//        for (int i = COUNT; i < space; i++) {
+//                printf(" ");
+//        }
+//        printf("%d\n", root->data);
+//
+//        bst_print_helper(root->left, space);
+//}
+//
+//void bst_print_pretty(BSTPtr root)
+//{
+//        bst_print_helper2(root, 0);
+//}
+static void print_array(int path[], int len)
+{
+        for (int i = 0; i < len; i++) {
+                printf("%d ", path[i]);
+        }
+        printf("\n");
+}
+
+static void print_paths_recur(BSTPtr root, int path[], int len)
+{
+        if (root == NULL) {
+                return ;
+        }
+        path[len] = root->data;
+        if (!root->left && !root->right) {
+                print_array(path, len + 1);
+        } else {
+                print_paths_recur(root->left, path, len + 1);
+                print_paths_recur(root->right, path, len + 1);
+        }
+}
+
+
+void bst_print_root_leaf_path(BSTPtr root)
+{
+        int path[1000];
+        print_paths_recur(root, path, 0);
+}
+
+NodePtr bst_random_construct(int number_of_nodes)
+{
+        srand(time(NULL));
+        NodePtr root = NULL;
+        while (number_of_nodes--) {
+                root = bst_insert(root, rand());
+        }
+        return root;
 }

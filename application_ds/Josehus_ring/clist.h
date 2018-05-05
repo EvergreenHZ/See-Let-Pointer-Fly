@@ -14,17 +14,19 @@ typedef struct Node* NodePtr;
  * check dlist for more details
  */
 
-void clist_init(Clist);
+NodePtr clist_init(DataType);
+
+NodePtr clist_create_node(DataType);
 
 void clist_destroy(Clist);
 
-void clist_print(Clist);
+//void clist_print(Clist);
 
-enum Status clist_insert_after(Clist, NodePtr, DataType);
+NodePtr clist_insert_after(Clist, NodePtr, DataType);
 
 //enum Status clist_push_front(Clist, DataType);
 
-enum Status clist_push_back(Clist, DataType);
+NodePtr clist_push_back(Clist, DataType);
 
 enum Status clist_remove_after(Clist, NodePtr);
 
@@ -36,10 +38,10 @@ enum Status clist_remove_current(Clist, NodePtr);
 
 //NodePtr clist_node_next(NodePtr);
 
-//NodePtr clist_node_previous(Clist, NodePtr);
+NodePtr clist_node_previous(Clist, NodePtr);
 
 NodePtr clist_last_node(Clist);
 
-NodePtr clist_at(Clist, int);
+//NodePtr clist_at(Clist, int);
 
 int clist_size(Clist);

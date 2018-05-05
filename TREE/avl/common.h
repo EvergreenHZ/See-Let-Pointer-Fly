@@ -8,6 +8,8 @@ void error(char *msg);
 #define MAX(a, b) \
         (a) > (b) ? (a) : (b);
 
+int max(int a, int b);
+
 #define SWAP(a, b) \
         do { \
                 int t = a; \

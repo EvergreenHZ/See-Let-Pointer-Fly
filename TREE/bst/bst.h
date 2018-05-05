@@ -29,10 +29,22 @@ NodePtr bst_insert2(BSTPtr, DataType);
 
 NodePtr bst_find_parent(BSTPtr, NodePtr);
 
+BSTPtr bst_delete(BSTPtr, NodePtr);
+
+BSTPtr bst_delete2(BSTPtr, DataType);
+
+BSTPtr bst_delete3(BSTPtr, NodePtr);
+
+BSTPtr bst_delete_value(BSTPtr, DataType);
+
+BSTPtr bst_delete_value3(BSTPtr, DataType);
+
 void bst_print(BSTPtr);
 
 void bst_inorder_tranversal(BSTPtr);
 
-BSTPtr bst_delete(BSTPtr, NodePtr);
+//void bst_print_pretty(BSTPtr);
 
-void bst_delete_value(BSTPtr, DataType);
+void bst_print_root_leaf_path(BSTPtr);
+
+NodePtr bst_random_construct(int number_of_nodes);

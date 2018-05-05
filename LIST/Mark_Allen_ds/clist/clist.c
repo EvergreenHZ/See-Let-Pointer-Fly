@@ -4,6 +4,7 @@
 
 void clist_init(Clist clist)
 {
+        clist->data = 0;
         clist->next = clist;
 }
 
@@ -74,4 +75,43 @@ int clist_size(Clist clist)
                 n++;
         }
         return n;
+}
+
+/**
+ * return NULL if empty
+ */
+NodePtr clist_last_node(Clist clist)
+{
+        if (clist == NULL) {
+                return NULL;
+        }
+        NodePtr p = clist;
+        while (p->next) {
+                p = p->next;
+        }
+        return p;
+}
+
+enum Status clist_push_back(Clist clist, DataType data)
+{
+        NodePtr last_node = clist_last_node(clist);
+        return clist_insert_after(clist, last_node, data);
+}
+
+NodePtr clist_find_previous(Clist clist, NodePtr current_node)
+{
+        if (clist == NULL) {
+                return NULL;  // it won't be this case
+        }
+        NodePtr p = clist;
+        while (p->next != current_node && p->next != clist) {  // you can't infinity loop
+                p = p->next;
+        }
+        return p;
+}
+
+enum Status clist_remove_current(Clist clist, NodePtr current_node)
+{
+        NodePtr previous = clist_find_previous(clist, current_node);
+        return clist_remove_after(clist, previous);
 }

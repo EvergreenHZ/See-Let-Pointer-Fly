@@ -17,3 +17,8 @@ void *Malloc(size_t size)
         
         return p;
 }
+
+int max(int a, int b)
+{
+        return a > b ? a : b;
+}
