@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 
+#define INFINITY_DISTANCE 10000000.0
+
 class Edge
 {
         public:
@@ -21,11 +23,13 @@ class Vertex
                 int label;
                 bool marked;
                 int path_from;
+                double dist;
                 std::vector<Edge> adj_verts;
 
                 Vertex(int);  // label can not be changed, once set.
                 void setMarked(bool m) { marked = m;}
                 void setPathForm(int previous) { path_from = previous;}
+                void setDist(double dist) { this->dist = dist;}
 };
 
 class Graph
@@ -75,10 +79,16 @@ class Graph
 
                 Graph transposeGraph();
 
+                /* Shortest Path Algo */
+                void unweightedShortestPath(int start_vertex);
+
+                void dijkstra(int start_vertex);
+
                 /* display */
                 void printGraph();
 
-                void tranversalGraph(int);  // default 0
+                //void tranversalGraph(int);  // default 0
 
                 bool saveGraph();  // save to file, use C style
+
 };
