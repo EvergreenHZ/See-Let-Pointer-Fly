@@ -40,6 +40,10 @@ class Graph
                 bool directed;
                 std::vector<Vertex> vertex_list;
 
+        private:
+                void readEdges(std::vector<Edge> &);
+
+                bool comp(Edge, Edge);
         public:
                 Graph(int, int, bool);
 
@@ -60,6 +64,8 @@ class Graph
 
                 double distanceBetween(int, int);  // u, v minimum distance
 
+                void reset();
+
                 /* top sort */
                 std::vector<Vertex> topSort();
 
@@ -69,9 +75,9 @@ class Graph
                 void bfs(int start_vertex = 0);  // default 0
 
                 /* Spanning Tree Algo */
-                Graph primSpanningTree();
+                void primSpanningTree();
 
-                Graph kruscalSpanningTree();
+                Graph* kruscalSpanningTree();
 
                 Graph dfsSpanningTree();
 
@@ -86,6 +92,8 @@ class Graph
 
                 /* display */
                 void printGraph();
+
+                void printPath(int);
 
                 //void tranversalGraph(int);  // default 0
 

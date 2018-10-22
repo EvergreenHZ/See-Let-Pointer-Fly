@@ -1,8 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "common.h"
 
-void error(char *msg)
+void Error(char *msg)
 {
         printf("%s\n", msg);
         exit(-1);

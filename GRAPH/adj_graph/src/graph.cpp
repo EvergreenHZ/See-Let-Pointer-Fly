@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <string>
 #include <deque>
 #include "graph.h"
@@ -25,6 +26,15 @@ Graph::Graph(int verteces, int edges, bool directed):\
         for (int i = 0; i < verteces; i++) {
                 Vertex v(i);
                 vertex_list.push_back(v);
+        }
+}
+
+void Graph::reset()
+{
+        for (int i = 0; i < num_verteces; i++) {
+                vertex_list[i].marked = false;
+                vertex_list[i].path_from = -1;
+                vertex_list[i].dist = INFINITY_DISTANCE;
         }
 }
 
@@ -94,6 +104,17 @@ void Graph::printGraph()
         }
 }
 
+void Graph::printPath(int terminated_vertex)
+{
+        if (vertex_list[terminated_vertex].path_from != -1) {
+                printPath(vertex_list[terminated_vertex].path_from);
+                cout << " -> ";
+        }
+        //cout << vertex_list[terminated_vertex].label;
+        cout << terminated_vertex;
+}
+
+
 bool Graph::isCyclic()
 {
         vector<Vertex> top_sort = topSort();
@@ -106,6 +127,7 @@ bool Graph::isCyclic()
 
 vector<Vertex> Graph::topSort()
 {
+        reset();
         vector<Vertex> Queue;
         vector<Vertex> top_sort_result;
         vector<int> indegrees;
@@ -140,6 +162,7 @@ vector<Vertex> Graph::topSort()
 
 void Graph::unweightedShortestPath(int start_vertex)
 {
+        reset();
         vector<Vertex> Queue;
         vertex_list[start_vertex].dist = 0;
 
@@ -170,6 +193,7 @@ void Graph::dijkstra(int start_vertex)
 {
         static int count = 0;
         if (count == 0) {
+                reset();
                 vertex_list[start_vertex].dist = 0.0;
         }
         if (++count <= num_verteces) {
@@ -178,7 +202,7 @@ void Graph::dijkstra(int start_vertex)
                 for (unsigned int i = 0; i < vertex_list[start_vertex].adj_verts.size(); i++) {
                         double &dist = vertex_list[vertex_list[start_vertex].adj_verts[i].to].dist;
                         double updated_dist = vertex_list[start_vertex].dist + \
-                                        vertex_list[start_vertex].adj_verts[i].weight;
+                                              vertex_list[start_vertex].adj_verts[i].weight;
                         if (updated_dist < dist) {
                                 dist = updated_dist;
                                 vertex_list[vertex_list[start_vertex].adj_verts[i].to].path_from = start_vertex;
@@ -197,3 +221,116 @@ void Graph::dijkstra(int start_vertex)
                 dijkstra(unmarked_vertex_with_minimum_dist);
         }
 }
+
+/* Suppose the graph is connected */
+void Graph::primSpanningTree()
+{
+        //vector<Vertex> Queue;
+        static int count = 1;
+
+        if (count == 1) {
+                //reset();
+                cout << "added Vertex: " << 0 << endl;
+                vertex_list[0].marked = true;
+        }
+
+        if (++count <= num_verteces) {
+                double weight = INFINITY_DISTANCE;
+                Edge* min_weight_edge = NULL;
+
+                for (int i = 0; i < num_verteces; i++) {
+                        if (vertex_list[i].marked) {
+                                vector<Edge> &edges = vertex_list[i].adj_verts;
+                                for (unsigned int j = 0; j < edges.size(); j++) {
+                                        if (!vertex_list[edges[j].to].marked && \
+                                                        weight > edges[j].weight) {
+                                                weight = edges[j].weight;
+                                                min_weight_edge = &(edges[j]);
+                                                vertex_list[edges[j].to].path_from = i;
+                                        }
+                                }
+                        }
+                }
+                cout << "added Vertex: " << (*min_weight_edge).to << endl;
+                vertex_list[(*min_weight_edge).to].marked = true;
+                primSpanningTree();
+        }
+
+}
+
+//bool Graph::comp(Edge e1, Edge e2)
+//{
+//        return e1.weight > e2.weight;
+//}
+//
+//void Graph::readEdges(vector<Edge> &edges)
+//{
+//        bool *readed_flags = new bool[num_verteces][num_verteces];
+//
+//        for (int i = 0; i < num_verteces; i++) {
+//                for (int j = 0; j < num_verteces; j++) {
+//                        readed_flags[i][j] = false;
+//                }
+//        }
+//
+//        for (int i = 0; i < num_verteces; i++) {
+//                Vertex &v = vertex_list[i];
+//                
+//                for (unsigned int j = 0; j < v.adj_verts.size(); j++) {
+//                        int from = v.label;
+//                        int to   = v.adj_verts[j].to;
+//                        if (!readed_flags[from][to]) {
+//                                edges.push_back(v.adj_verts[j]);
+//                                readed_flags[from][to] = true;
+//                                readed_flags[to][from] = true;
+//                        }
+//                }
+//        }
+//}
+//
+//
+//
+//Graph* kruscalSpanningTree()
+//{
+//        static vector<Edge> edges;
+//        static int accepted = 0;
+//        static int i = 0;
+//        if (accepted == 0) {
+//                readEdges(edges);
+//                sort(edges.begin(), edges.end(), comp);
+//        }
+//
+//        static int same_set[num_verteces];
+//        for (int i = 0; i < num_verteces; i++) {
+//                same_set[i] = i;
+//        }
+//
+//        static Graph* g = new Graph(num_verteces, 2 *  (num_verteces - 1), false);
+//
+//        return g;
+//}
+//
+//        //if (accepted < num_verteces) {
+//        //        Edge e = edges[i++];
+//
+//        //        bool &from_marked = vertex_list[e.from].marked;
+//        //        bool &to_marked   = vertex_list[e.to].marked;
+//
+//        //        from_marked = true;
+//        //        to_marked   = true;
+//
+//        //        if (!from_marked && !to_marked) {
+//        //                if (e.from < e.to) {
+//        //                        same_set[e.to] = e.from;
+//        //                } else {
+//        //                        same_set[e.from] = e.to;
+//        //                }
+//        //        } else if (!from_marked && to_marked) {
+//        //                same_set[e.from] = e.to;
+//        //        } else if (from_marked && !to_marked) {
+//        //                same_set[e.to] = e.from;
+//        //        } else {
+//        //                if (same_set[e.from] == same_set[e.to]) {
+//        //                        ;
+//        //                } else {
+//
